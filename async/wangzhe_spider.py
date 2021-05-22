@@ -85,14 +85,23 @@ class AsyncSpider:
         hero_inscription_tips = html.xpath(
             ".//div[@class='zk-con3 zk-con']/div[@class='sugg rs fl']/div[@class='sugg-info info']/p[@class='sugg-tips']/text()")[
             0]
+        hero_recommend_id = html.xpath(
+            ".//div[@class='zk-con4 zk-con']/div[@class='equip rs fl']/div[@class='equip-bd']/div[@class='equip-info l']/ul/@data-item")
+        hero_recommend_tips = html.xpath(
+            ".//div[@class='equip-bd']/div[@class='equip-info l']/p[@class='equip-tips']/text()")
+        hero_story = html.xpath("/html/body/div[@id='hero-story']/div[@class='pop-bd']/p/text()")
         # print("名字：", hero_name)
         # print("技能：", hero_skill)
         # print("技能详情：", hero_skill_detail)
         # print("铭文推荐：", hero_inscription)
         # print("铭文推荐Tips：", hero_inscription_tips)
+        # print(hero_recommend_id)
+        # print(hero_recommend_tips)
+        # print(hero_story)
 
         print(f"解析完成url={url}")
-        return hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, hero_inscription_tips, hero_relation_uri, hero_relation_desc
+        return hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, \
+               hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story
 
     def daili_req(self, url):
         try:
@@ -136,7 +145,7 @@ class AsyncSpider:
     '''持久化英雄详情页'''
 
     def save_hero_page_file(self, url):
-        hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, hero_inscription_tips, hero_relation_uri, hero_relation_desc = self.get_hero_page(
+        hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story = self.get_hero_page(
             url)
         hero_info = {
             "name": hero_name,
@@ -146,7 +155,10 @@ class AsyncSpider:
             "inscription": hero_inscription,
             "inscription_tips": hero_inscription_tips,
             "relation_uri": hero_relation_uri,
-            "relation_desc": hero_relation_desc
+            "relation_desc": hero_relation_desc,
+            "hero_recommend_id": hero_recommend_id,
+            "hero_recommend_tips": hero_recommend_tips,
+            "hero_story": hero_story
         }
         print(hero_info)
         self.write_hero_page_file(hero_info)

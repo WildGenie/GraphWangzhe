@@ -17,7 +17,7 @@ http://game.gtimg.cn/images/yxzj/act/a20160510story/relavance/data.js
 
 class GraphHero():
     def __init__(self):
-        print("init...")
+        print("GraphHero init...")
         self.hero_roles_path = "../data/hero_roles.txt"
         self.hero_relate_path = "../data/hero_relate.txt"
         self.db = mysql.connect(user="root", password="123456", host="localhost", database="spider", port=3306)
