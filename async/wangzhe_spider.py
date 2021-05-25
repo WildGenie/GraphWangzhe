@@ -27,8 +27,8 @@ class AsyncSpider:
         self.headers = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
         }
-        self.db = mysql.connect(user="root", password="123456", host="localhost", database="spider", port=3306)
-        self.cursor = self.db.cursor()
+        # self.db = mysql.connect(user="root", password="123456", host="localhost", database="spider", port=3306)
+        # self.cursor = self.db.cursor()
         self.home_url = "https://pvp.qq.com/web201605/herolist.shtml"
         self.hero_url_prefix = "https://pvp.qq.com/web201605/"
         self.hero_page_file_path = "../spiderData/hero_page.json"
@@ -64,9 +64,8 @@ class AsyncSpider:
             ".//div[@class='skill-info l info']/div[@class='skill-show']/div[@class='show-list']/p[@class='skill-desc']/text()")
         hero_skill_img = html.xpath(
             ".//div[@class='skill ls fl']/div[@class='skill-info l info']/ul[@class='skill-u1']/li/img/@src")
-        hero_ming_id = html.xpath(
-            ".//div[@class='zk-con3 zk-con']/div[@class='sugg rs fl']/div[@class='sugg-info info']/ul[@class='sugg-u1']/@data-ming")[
-            0].split('|')
+        hero_inscription = html.xpath(
+            ".//div[@class='zk-con3 zk-con']/div[@class='sugg rs fl']/div[@class='sugg-info info']/ul[@class='sugg-u1']/@data-ming")
         # with open('../data/hero_id.json', 'r', encoding='utf-8')as fp:
         #     hero_id = json.load(fp)
 
@@ -79,9 +78,7 @@ class AsyncSpider:
             ".//div[@class='hero-info-box']/div/div[@class='hero-info l info']/div[@class='hero-list hero-relate-list fl']/ul/li/a/img/@src")
         hero_relation_desc = html.xpath(
             ".//div[@class='zk-con4 zk-con']/div[@class='hero ls fl']/div[@class='hero-info-box']/div/div[@class='hero-info l info']/div[@class='hero-list-desc']/p/text()")
-        hero_inscription = []
-        for ming_id in hero_ming_id:
-            hero_inscription.append(ming_dict[ming_id])
+
         hero_inscription_tips = html.xpath(
             ".//div[@class='zk-con3 zk-con']/div[@class='sugg rs fl']/div[@class='sugg-info info']/p[@class='sugg-tips']/text()")[
             0]
@@ -90,6 +87,8 @@ class AsyncSpider:
         hero_recommend_tips = html.xpath(
             ".//div[@class='equip-bd']/div[@class='equip-info l']/p[@class='equip-tips']/text()")
         hero_story = html.xpath("/html/body/div[@id='hero-story']/div[@class='pop-bd']/p/text()")
+        hero_summoner = html.xpath(
+            ".//div[@class='zk-con4 zk-con']/div[@class='hero ls fl']/div[@class='sugg-info2 info']/p[@id='skill3']/@data-skill")
         # print("名字：", hero_name)
         # print("技能：", hero_skill)
         # print("技能详情：", hero_skill_detail)
@@ -101,7 +100,7 @@ class AsyncSpider:
 
         print(f"解析完成url={url}")
         return hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, \
-               hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story
+               hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story, hero_summoner
 
     def daili_req(self, url):
         try:
@@ -145,7 +144,7 @@ class AsyncSpider:
     '''持久化英雄详情页'''
 
     def save_hero_page_file(self, url):
-        hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story = self.get_hero_page(
+        hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story, hero_summoner = self.get_hero_page(
             url)
         hero_info = {
             "name": hero_name,
@@ -158,7 +157,8 @@ class AsyncSpider:
             "relation_desc": hero_relation_desc,
             "hero_recommend_id": hero_recommend_id,
             "hero_recommend_tips": hero_recommend_tips,
-            "hero_story": hero_story
+            "hero_story": hero_story,
+            "hero_summoner": hero_summoner
         }
         print(hero_info)
         self.write_hero_page_file(hero_info)
