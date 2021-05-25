@@ -75,7 +75,7 @@ class GraphFoundation():
         for item in nodes:
             print(f"正在处理  label:{label}  ming_name:{item['ming_name']}")
             node = Node(label, name=item['ming_name'], ming_id=item['ming_id'],
-                        ming_type=item['ming_type'], ming_grade=item['ming_grade'],ming_des = item['ming_des'],
+                        ming_type=item['ming_type'], ming_grade=item['ming_grade'], ming_des=item['ming_des'],
                         ming_img_url=f'{self.ming_img_prefix}{item["ming_id"]}.png')
             self.g.create(node)
         return
@@ -86,7 +86,7 @@ class GraphFoundation():
         self.read_equipment_json()
         self.create_equipment_node("equipment", self.equipment_data)
         self.read_ming_json()
-        self.create_ming_node("ming",self.ming_data)
+        self.create_ming_node("ming", self.ming_data)
 
     def isExtend(self, item, param):
         for key in item:
