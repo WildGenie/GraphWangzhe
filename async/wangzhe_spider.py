@@ -53,9 +53,7 @@ class AsyncSpider:
         # fp.write(response.text)
         with open('../data/ming.json', 'r', encoding='utf-8')as fp:
             ming_data = json.load(fp)
-        ming_dict = {}
-        for item in ming_data:
-            ming_dict[item['ming_id']] = item
+        ming_dict = {item['ming_id']: item for item in ming_data}
         html = etree.HTML(response.text)
         hero_name = html.xpath(".//div[@class='zk-con3 zk-con']/div[@class='crumb']/label/text()")[0]
         hero_skill = html.xpath(
@@ -100,7 +98,7 @@ class AsyncSpider:
 
         print(f"解析完成url={url}")
         return hero_name, hero_skill, hero_skill_detail, hero_skill_img, hero_inscription, \
-               hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story, hero_summoner
+                   hero_inscription_tips, hero_relation_uri, hero_relation_desc, hero_recommend_id, hero_recommend_tips, hero_story, hero_summoner
 
     def daili_req(self, url):
         try:
@@ -131,7 +129,7 @@ class AsyncSpider:
             print(f"{self.hero_name_file_path}已经存在")
             return
         fp = open(self.hero_name_file_path, 'a+', encoding="utf-8")
-        for i in range(0, len(self.hero_names)):
+        for i in range(len(self.hero_names)):
             json.dump({
                 "name": self.hero_names[i],
                 "url": self.hero_url[i],
@@ -172,7 +170,7 @@ class AsyncSpider:
         start_time = time.time()
         self.get_hero_name()
         self.save_hero_name_file()
-        for i in range(0, len(self.hero_url)):
+        for i in range(len(self.hero_url)):
             self.save_hero_page_file(self.hero_url[i])
         # pool = Pool(len(self.hero_names))
         # pool.map(self.get_hero_page, self.hero_url)

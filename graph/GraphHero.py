@@ -89,9 +89,7 @@ class GraphHero():
     '''创建英雄节点调用'''
 
     def create_hero_node_process(self):
-        hero_roles_temp = []
-        for item in self.hero_roles:
-            hero_roles_temp.append(self.hero_roles[item])
+        hero_roles_temp = [self.hero_roles[item] for item in self.hero_roles]
         print("开始创建英雄。。。")
         self.create_hero_node("hero", hero_roles_temp)
         print("创建英雄完成。。。")
@@ -99,9 +97,11 @@ class GraphHero():
     '''创建英雄阵营关系网'''
 
     def create_hero_group_relationship(self):
-        hero_group_edges = []
-        for item in self.hero_roles:
-            hero_group_edges.append([self.hero_roles[item][1], self.hero_roles[item][2]])
+        hero_group_edges = [
+            [self.hero_roles[item][1], self.hero_roles[item][2]]
+            for item in self.hero_roles
+        ]
+
         # print(hero_group_edges)
         self.create_relationship("hero", "group", hero_group_edges, "阵营", "阵营")
 
@@ -111,9 +111,7 @@ class GraphHero():
         print(
             f"create_relationship start_node:{start_node} end_node:{end_node} edges:{edges} rel_type:{rel_type} rel_name:{rel_name}")
         # 去重处理
-        set_edges = []
-        for edge in edges:
-            set_edges.append('###'.join(edge))
+        set_edges = ['###'.join(edge) for edge in edges]
         for edge in set(set_edges):
             edge = edge.split('###')
             p = edge[0]

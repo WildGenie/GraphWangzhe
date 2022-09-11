@@ -27,19 +27,17 @@ class GraphHeroSummoner():
         }
 
     def read_hero_page(self):
+        # for summoner_id in summoner_ids:
+        #     self.create_hero_summoner_relationship("hero", "summoner", [data["name"], summoner_id], "推荐", "召唤师技能推荐")
+        ex = 'img201606/heroimg/(.*?).jpg'
         for item in open(self.hero_page_path, encoding='utf-8'):
             data = json.loads(item)
             summoner_ids = data["hero_summoner"][0].split("|")
-            # for summoner_id in summoner_ids:
-            #     self.create_hero_summoner_relationship("hero", "summoner", [data["name"], summoner_id], "推荐", "召唤师技能推荐")
-            ex = 'img201606/heroimg/(.*?).jpg'
-            num = 1
-            for relation_url in data["relation_uri"]:
+            for num, relation_url in enumerate(data["relation_uri"], start=1):
                 hero_ename = re.findall(ex, relation_url, re.S)[0].split("/")[0]
                 self.create_hero_partner_relationship("hero", "hero", [data["name"], hero_ename],
                                                       self.relation[f'{num}'],
                                                       self.relation[f'{num}'], data["relation_desc"][num - 1])
-                num += 1
 
     '''创建英雄铭文关联边'''
 
