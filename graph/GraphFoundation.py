@@ -89,10 +89,7 @@ class GraphFoundation():
         self.create_ming_node("ming", self.ming_data)
 
     def isExtend(self, item, param):
-        for key in item:
-            if (param == key):
-                return True
-        return False
+        return any((param == key) for key in item)
 
 
 if __name__ == '__main__':
